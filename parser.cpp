@@ -366,17 +366,23 @@ int scanner(tokentype &tt, string &w)
 // ** Need syntaxerror1 and syntaxerror2 functions (each takes 2 args)
 //    to display syntax error messages as specified by me.  
 
+// Token queue used for parsing
+queue<tokentype> tokenQueue;
+queue<string> wordQueue;
+
 // Type of error: **
 // Done by: ** 
-void syntaxerror1(  )
+void syntaxerror1(string word, tokentype expected)
 {
-
+  cout << "SYNTAX ERROR: expected " << tokenName[expected] << " but found " << word << endl;
+  exit(1);
 }
 // Type of error: **
 // Done by: ** 
-void syntaxerror2(  ) 
+void syntaxerror2(string word, string nonterm) 
 {
-
+  cout << "SYNTAX ERROR: unexpected " << word << " found in " << nonterm << endl;
+  exit(1);
 }
 
 // ** Need the updated match and next_token with 2 global vars
@@ -386,14 +392,34 @@ void syntaxerror2(  )
 // Done by: **
 tokentype next_token()
 {
-
+  if(tokenQueue.size() > 0)
+  {
+    return tokenQueue.front();
+  }
+  return EOFM;
 }
 
 // Purpose: **
 // Done by: **
 bool match(tokentype expected) 
 {
-  
+  if(tokenQueue.size() == 0)
+    return false;
+
+  tokentype token = tokenQueue.front();
+  string word = wordQueue.front();
+  tokenQueue.pop();
+  wordQueue.pop();
+  bool res = (token == expected);
+
+  if(res)
+  {
+    cout << "Matched " << tokenName[expected] << endl;
+    return true;
+  }
+
+  syntaxerror1(word, expected); // Error matching call syntax error
+  return false;
 }
 
 // ----- RDP functions - one per non-term -------------------
@@ -402,52 +428,185 @@ bool match(tokentype expected)
 // ** Be sure to put the corresponding grammar rule above each function
 // ** Be sure to put the name of the programmer above each function
 
+void parse_s();
+void parse_afterSubject();
+void parse_afterNoun();
+void parse_afterObject();
+void parse_verb();
+void parse_noun();
+void parse_tense();
+void parse_be();
+
+
 // Grammar: **
 // Done by: **
-bool parse_story()
+void parse_story()
 {
   cout << "Processing <story>\n\n";
-}
 
-bool parse_s()
-{
   cout << "Processing <s>\n";
+  cout << "Scanner called using word: " << wordQueue.front() << endl;
+  parse_s();
+  while(next_token() != EOFM)
+  {
+    cout << "Processing <s>\n";
+    parse_s();
+  }
+  string word = wordQueue.front();
+  cout << "\nSuccessfully parsed <story>.\n";
 }
 
-bool parse_afterSubject()
+void parse_s()
+{
+  if(next_token() == CONNECTOR)
+    match(CONNECTOR);
+
+  parse_noun();
+  cout << "Scanner called using word: " << wordQueue.front() << endl;
+  match(SUBJECT);
+  parse_afterSubject();
+}
+
+void parse_afterSubject()
 {
   cout << "Processing <afterSubject>\n";
+  cout << "Scanner called using word: " << wordQueue.front() << endl;
+
+  if(next_token() == WORD2)
+  {
+    parse_verb();
+    parse_tense();
+    match(PERIOD);
+  }
+  else
+  {
+    parse_noun();
+    parse_afterNoun();
+  }
 }
 
-bool parse_afterObject()
+void parse_afterNoun()
+{
+  string word = wordQueue.front();
+  cout << "Processing <afterNoun>\n";
+  cout << "Scanner called using word: " << wordQueue.front() << endl;
+
+  switch(next_token())
+  {
+    case IS:
+    case WAS:
+      parse_be();
+      match(PERIOD);
+      break;
+    case DESTINATION:
+      match(DESTINATION);
+      parse_verb();
+      parse_tense();
+      match(PERIOD);
+      break;
+    case OBJECT:
+      match(OBJECT);
+      parse_afterObject();
+      break;
+    default:
+      syntaxerror2(word, "after noun");
+  }
+}
+
+void parse_afterObject()
 {
   cout << "Processing <afterObject>\n";
+  string word = wordQueue.front();
+
+  switch(next_token())
+  {
+    case WORD2:
+      parse_verb();
+      parse_tense();
+      match(PERIOD);
+      break;
+    case WORD1:
+    case PRONOUN:
+      parse_noun();
+      match(DESTINATION);
+      parse_verb();
+      parse_tense();
+      match(PERIOD);
+      break;
+    default:
+      syntaxerror2(word, "after object");
+  }
+  cout << "Scanner called using word: " << wordQueue.front() << endl;
 }
 
-bool parse_verb()
+void parse_verb()
 {
   cout << "Processing <verb>\n";
+  match(WORD2);
+  cout << "Scanner called using word: " << wordQueue.front() << endl;
 }
 
-bool parse_noun()
+void parse_noun()
 {
   cout << "Processing <noun>\n";
+  string word = wordQueue.front();
+
+  switch(next_token())
+  {
+    case WORD1:
+      match(WORD1);
+      break;
+    case PRONOUN:
+      match(PRONOUN);
+      break;
+    default:
+      syntaxerror2(word, "noun"); 
+  }
 }
 
-bool parse_tense()
+void parse_tense()
 {
   cout << "Processing <tense>\n";
+  string word = wordQueue.front();
+
+  switch(next_token())
+  {
+    case VERBPAST:
+      match(VERBPAST);
+      break;
+    case VERBPASTNEG:
+      match(VERBPASTNEG);
+      break;
+    case VERB:
+      match(VERB);
+      break;
+    case VERBNEG:
+      match(VERBNEG);
+      break;
+    default:
+      syntaxerror2(word, "tense");
+  }
 }
 
-bool parse_be()
+void parse_be()
 {
   cout << "Processing <be>\n";
+  string word = wordQueue.front();
+
+  switch(next_token())
+  {
+    case IS:
+      match(IS);
+      break;
+    case WAS:
+      match(WAS);
+      break;
+    default:
+      syntaxerror2(word, "be");
+  }
 }
 
 string filename;
-// Token queue used for parsing
-queue<tokentype> tokenQueue;
-queue<string> wordQueue;
 
 //----------- Driver ---------------------------
 
@@ -472,9 +631,6 @@ int main()
     
     if (theword == "eofm")
       break; // stop now
-
-    cout << "Type is:" << tokenName[thetype] << endl;
-    cout << "Word is:" << theword << endl;
   }
 
   cout << "End of file is encountered." << endl;

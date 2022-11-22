@@ -1,0 +1,137 @@
+Processing <story>
+
+Processing <s>
+Scanner called using word: watashi
+Processing <noun>
+Matched PRONOUN
+Scanner called using word: wa
+Matched SUBJECT
+Processing <afterSubject>
+Scanner called using word: rika
+Processing <noun>
+Matched WORD1
+Processing <afterNoun>
+Scanner called using word: desu
+Processing <be>
+Matched IS
+Matched PERIOD
+Processing <s>
+Processing <noun>
+Matched PRONOUN
+Scanner called using word: wa
+Matched SUBJECT
+Processing <afterSubject>
+Scanner called using word: sensei
+Processing <noun>
+Matched WORD1
+Processing <afterNoun>
+Scanner called using word: desu
+Processing <be>
+Matched IS
+Matched PERIOD
+Processing <s>
+Processing <noun>
+Matched WORD1
+Scanner called using word: wa
+Matched SUBJECT
+Processing <afterSubject>
+Scanner called using word: gohan
+Processing <noun>
+Matched WORD1
+Processing <afterNoun>
+Scanner called using word: o
+Matched OBJECT
+Processing <afterObject>
+Processing <verb>
+Matched WORD2
+Scanner called using word: masu
+Processing <tense>
+Matched VERB
+Matched PERIOD
+Scanner called using word: watashi
+Processing <s>
+Processing <noun>
+Matched PRONOUN
+Scanner called using word: wa
+Matched SUBJECT
+Processing <afterSubject>
+Scanner called using word: tesuto
+Processing <noun>
+Matched WORD1
+Processing <afterNoun>
+Scanner called using word: o
+Matched OBJECT
+Processing <afterObject>
+Processing <noun>
+Matched WORD1
+Matched DESTINATION
+Processing <verb>
+Matched WORD2
+Scanner called using word: mashita
+Processing <tense>
+Matched VERBPAST
+Matched PERIOD
+Scanner called using word: shikashi
+Processing <s>
+Matched CONNECTOR
+Processing <noun>
+Matched WORD1
+Scanner called using word: wa
+Matched SUBJECT
+Processing <afterSubject>
+Scanner called using word: yorokobI
+Processing <verb>
+Matched WORD2
+Scanner called using word: masendeshita
+Processing <tense>
+Matched VERBPASTNEG
+Matched PERIOD
+Processing <s>
+Matched CONNECTOR
+Processing <noun>
+Matched PRONOUN
+Scanner called using word: wa
+Matched SUBJECT
+Processing <afterSubject>
+Scanner called using word: kanashii
+Processing <noun>
+Matched WORD1
+Processing <afterNoun>
+Scanner called using word: deshita
+Processing <be>
+Matched WAS
+Matched PERIOD
+Processing <s>
+Matched CONNECTOR
+Processing <noun>
+Matched WORD1
+Scanner called using word: wa
+Matched SUBJECT
+Processing <afterSubject>
+Scanner called using word: toire
+Processing <noun>
+Matched WORD1
+Processing <afterNoun>
+Scanner called using word: ni
+Matched DESTINATION
+Processing <verb>
+Matched WORD2
+Scanner called using word: mashita
+Processing <tense>
+Matched VERBPAST
+Matched PERIOD
+Processing <s>
+Processing <noun>
+Matched WORD1
+Scanner called using word: wa
+Matched SUBJECT
+Processing <afterSubject>
+Scanner called using word: nakI
+Processing <verb>
+Matched WORD2
+Scanner called using word: mashita
+Processing <tense>
+Matched VERBPAST
+Matched PERIOD
+
+Successfully parsed <story>.
