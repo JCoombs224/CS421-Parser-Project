@@ -1,6 +1,7 @@
 #include<iostream>
 #include<fstream>
 #include<string>
+#include<queue>
 using namespace std;
 
 /* INSTRUCTION:  Complete all ** parts.
@@ -11,6 +12,7 @@ using namespace std;
        and then append the two files into one: 
           cat scanner.cpp parser.cpp > myparser.cpp
 */
+
 //=====================================================
 // File scanner.cpp written by: Group Number: 14
 //=====================================================
@@ -366,21 +368,33 @@ int scanner(tokentype &tt, string &w)
 
 // Type of error: **
 // Done by: ** 
-void syntaxerror1(  ){    }
+void syntaxerror1(  )
+{
+
+}
 // Type of error: **
 // Done by: ** 
-void syntaxerror2(  ) {    }
+void syntaxerror2(  ) 
+{
+
+}
 
 // ** Need the updated match and next_token with 2 global vars
 // saved_token and saved_lexeme
 
 // Purpose: **
 // Done by: **
-tokentype next_token(){}
+tokentype next_token()
+{
+
+}
 
 // Purpose: **
 // Done by: **
-bool match(tokentype expected) {}
+bool match(tokentype expected) 
+{
+  
+}
 
 // ----- RDP functions - one per non-term -------------------
 
@@ -390,8 +404,50 @@ bool match(tokentype expected) {}
 
 // Grammar: **
 // Done by: **
+bool parse_story()
+{
+  cout << "Processing <story>\n\n";
+}
+
+bool parse_s()
+{
+  cout << "Processing <s>\n";
+}
+
+bool parse_afterSubject()
+{
+  cout << "Processing <afterSubject>\n";
+}
+
+bool parse_afterObject()
+{
+  cout << "Processing <afterObject>\n";
+}
+
+bool parse_verb()
+{
+  cout << "Processing <verb>\n";
+}
+
+bool parse_noun()
+{
+  cout << "Processing <noun>\n";
+}
+
+bool parse_tense()
+{
+  cout << "Processing <tense>\n";
+}
+
+bool parse_be()
+{
+  cout << "Processing <be>\n";
+}
 
 string filename;
+// Token queue used for parsing
+queue<tokentype> tokenQueue;
+queue<string> wordQueue;
 
 //----------- Driver ---------------------------
 
@@ -399,13 +455,35 @@ string filename;
 // Done by:  **
 int main()
 {
+  tokentype thetype;
+  string theword;
   cout << "Enter the input file name: ";
   cin >> filename;
   fin.open(filename.c_str());
 
-  //** calls the <story> to start parsing
-  //** closes the input file 
+  // the loop continues until eofm is returned.
+  while (true)
+  {
+    scanner(thetype, theword); // call the scanner which sets
+                               // the arguments
 
+    tokenQueue.push(thetype);
+    wordQueue.push(theword);
+    
+    if (theword == "eofm")
+      break; // stop now
+
+    cout << "Type is:" << tokenName[thetype] << endl;
+    cout << "Word is:" << theword << endl;
+  }
+
+  cout << "End of file is encountered." << endl;
+  
+
+  //** calls the <story> to start parsing
+  parse_story();
+  //** closes the input file 
+  fin.close();
 }// end
 //** require no other input files!
 //** syntax error EC requires producing errors.txt of error messages
