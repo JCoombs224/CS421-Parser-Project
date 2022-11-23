@@ -1,7 +1,6 @@
 #include<iostream>
 #include<fstream>
 #include<string>
-#include<queue>
 using namespace std;
 
 /* INSTRUCTION:  Complete all ** parts.
@@ -346,14 +345,16 @@ int scanner(tokentype &tt, string &w)
     else // does not match WORD1 or WORD2
     {
       // Set token type to error
+      cout << "\nLexical error: " << w << " is not a valid token\n";
       tt = ERROR;
-      return 1;
+      return -1;
     }
   }
   else
   {
+    cout << "\nLexical error: " << w << " is not a valid token\n";
     tt = ERROR;
-    return 1;
+    return -1;
   }
 } // the end of scanner
 
@@ -366,59 +367,54 @@ int scanner(tokentype &tt, string &w)
 // ** Need syntaxerror1 and syntaxerror2 functions (each takes 2 args)
 //    to display syntax error messages as specified by me.  
 
-// Token queue used for parsing
-queue<tokentype> tokenQueue;
-queue<string> wordQueue;
-
 // Type of error: **
 // Done by: ** 
 void syntaxerror1(string word, tokentype expected)
 {
-  cout << "SYNTAX ERROR: expected " << tokenName[expected] << " but found " << word << endl;
+  cout << "\nSYNTAX ERROR: expected " << tokenName[expected] << " but found " << word << endl;
   exit(1);
 }
 // Type of error: **
 // Done by: ** 
 void syntaxerror2(string word, string nonterm) 
 {
-  cout << "SYNTAX ERROR: unexpected " << word << " found in " << nonterm << endl;
+  cout << "\nSYNTAX ERROR: unexpected " << word << " found in " << nonterm << endl;
   exit(1);
 }
 
 // ** Need the updated match and next_token with 2 global vars
 // saved_token and saved_lexeme
 
+string saved_lexme = "";
+tokentype saved_token;
+
 // Purpose: **
 // Done by: **
 tokentype next_token()
 {
-  if(tokenQueue.size() > 0)
+  if(saved_lexme == "")
   {
-    return tokenQueue.front();
+    scanner(saved_token, saved_lexme);
+    cout << "Scanner called using word: " << saved_lexme << endl;
   }
-  return EOFM;
+  return saved_token;
 }
 
 // Purpose: **
 // Done by: **
 bool match(tokentype expected) 
 {
-  if(tokenQueue.size() == 0)
-    return false;
-
-  tokentype token = tokenQueue.front();
-  string word = wordQueue.front();
-  tokenQueue.pop();
-  wordQueue.pop();
-  bool res = (token == expected);
+  next_token(); // If a match was done previously this will get the next token in the file
+  bool res = (saved_token == expected);
 
   if(res)
   {
     cout << "Matched " << tokenName[expected] << endl;
+    saved_lexme = "";
     return true;
   }
 
-  syntaxerror1(word, expected); // Error matching call syntax error
+  syntaxerror1(saved_lexme, expected); // Error matching call syntax error
   return false;
 }
 
@@ -428,6 +424,7 @@ bool match(tokentype expected)
 // ** Be sure to put the corresponding grammar rule above each function
 // ** Be sure to put the name of the programmer above each function
 
+// function prototypes
 void parse_s();
 void parse_afterSubject();
 void parse_afterNoun();
@@ -445,14 +442,12 @@ void parse_story()
   cout << "Processing <story>\n\n";
 
   cout << "Processing <s>\n";
-  cout << "Scanner called using word: " << wordQueue.front() << endl;
   parse_s();
   while(next_token() != EOFM)
   {
     cout << "Processing <s>\n";
     parse_s();
   }
-  string word = wordQueue.front();
   cout << "\nSuccessfully parsed <story>.\n";
 }
 
@@ -462,7 +457,6 @@ void parse_s()
     match(CONNECTOR);
 
   parse_noun();
-  cout << "Scanner called using word: " << wordQueue.front() << endl;
   match(SUBJECT);
   parse_afterSubject();
 }
@@ -470,7 +464,6 @@ void parse_s()
 void parse_afterSubject()
 {
   cout << "Processing <afterSubject>\n";
-  cout << "Scanner called using word: " << wordQueue.front() << endl;
 
   if(next_token() == WORD2)
   {
@@ -487,9 +480,7 @@ void parse_afterSubject()
 
 void parse_afterNoun()
 {
-  string word = wordQueue.front();
   cout << "Processing <afterNoun>\n";
-  cout << "Scanner called using word: " << wordQueue.front() << endl;
 
   switch(next_token())
   {
@@ -509,14 +500,13 @@ void parse_afterNoun()
       parse_afterObject();
       break;
     default:
-      syntaxerror2(word, "after noun");
+      syntaxerror2(saved_lexme, "after noun");
   }
 }
 
 void parse_afterObject()
 {
   cout << "Processing <afterObject>\n";
-  string word = wordQueue.front();
 
   switch(next_token())
   {
@@ -534,22 +524,19 @@ void parse_afterObject()
       match(PERIOD);
       break;
     default:
-      syntaxerror2(word, "after object");
+      syntaxerror2(saved_lexme, "after object");
   }
-  cout << "Scanner called using word: " << wordQueue.front() << endl;
 }
 
 void parse_verb()
 {
   cout << "Processing <verb>\n";
   match(WORD2);
-  cout << "Scanner called using word: " << wordQueue.front() << endl;
 }
 
 void parse_noun()
 {
   cout << "Processing <noun>\n";
-  string word = wordQueue.front();
 
   switch(next_token())
   {
@@ -560,14 +547,13 @@ void parse_noun()
       match(PRONOUN);
       break;
     default:
-      syntaxerror2(word, "noun"); 
+      syntaxerror2(saved_lexme, "noun"); 
   }
 }
 
 void parse_tense()
 {
   cout << "Processing <tense>\n";
-  string word = wordQueue.front();
 
   switch(next_token())
   {
@@ -584,14 +570,13 @@ void parse_tense()
       match(VERBNEG);
       break;
     default:
-      syntaxerror2(word, "tense");
+      syntaxerror2(saved_lexme, "tense");
   }
 }
 
 void parse_be()
 {
   cout << "Processing <be>\n";
-  string word = wordQueue.front();
 
   switch(next_token())
   {
@@ -602,7 +587,7 @@ void parse_be()
       match(WAS);
       break;
     default:
-      syntaxerror2(word, "be");
+      syntaxerror2(saved_lexme, "be");
   }
 }
 
@@ -619,22 +604,6 @@ int main()
   cout << "Enter the input file name: ";
   cin >> filename;
   fin.open(filename.c_str());
-
-  // the loop continues until eofm is returned.
-  while (true)
-  {
-    scanner(thetype, theword); // call the scanner which sets
-                               // the arguments
-
-    tokenQueue.push(thetype);
-    wordQueue.push(theword);
-    
-    if (theword == "eofm")
-      break; // stop now
-  }
-
-  cout << "End of file is encountered." << endl;
-  
 
   //** calls the <story> to start parsing
   parse_story();
