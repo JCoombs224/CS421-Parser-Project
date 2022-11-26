@@ -359,7 +359,7 @@ int scanner(tokentype &tt, string &w)
 } // the end of scanner
 
 //=================================================
-// File parser.cpp written by Group Number: **
+// File parser.cpp written by Group Number: 14
 //=================================================
 
 // ----- Four Utility Functions and Globals -----------------------------------
@@ -367,15 +367,15 @@ int scanner(tokentype &tt, string &w)
 // ** Need syntaxerror1 and syntaxerror2 functions (each takes 2 args)
 //    to display syntax error messages as specified by me.  
 
-// Type of error: **
-// Done by: ** 
+// Type of error: Syntaxerror 1 for match fails
+// Done by: Jamison Coombs, Lilly Mcgraw, Tim Nguyen
 void syntaxerror1(string word, tokentype expected)
 {
   cout << "\nSYNTAX ERROR: expected " << tokenName[expected] << " but found " << word << endl;
   exit(1);
 }
-// Type of error: **
-// Done by: ** 
+// Type of error: Syntaxerror 2 to be able to switch to the default
+// Done by: Jamison Coombs, Lilly Mcgraw, Tim Nguyen 
 void syntaxerror2(string word, string nonterm) 
 {
   cout << "\nSYNTAX ERROR: unexpected " << word << " found in " << nonterm << endl;
@@ -388,8 +388,8 @@ void syntaxerror2(string word, string nonterm)
 string saved_lexme = "";
 tokentype saved_token;
 
-// Purpose: **
-// Done by: **
+// Purpose: nonterm needs to be able to return the next token
+// Done by: Jamison Coombs, Lilly Mcgraw, Tim Nguyen
 tokentype next_token()
 {
   if(saved_lexme == "")
@@ -400,7 +400,7 @@ tokentype next_token()
   return saved_token;
 }
 
-// Purpose: **
+// Purpose: Checks the token that is different or syntax error
 // Done by: **
 bool match(tokentype expected) 
 {
@@ -435,7 +435,7 @@ void parse_tense();
 void parse_be();
 
 
-// Grammar: **
+// Grammar: <noun> ::= WORD1 | PRONOUN
 // Done by: **
 void parse_story()
 {
