@@ -3,6 +3,7 @@
 ##
 
 # Ignores files without extensions
+errors.txt
 
 ## Get latest from https://github.com/github/gitignore/blob/main/VisualStudio.gitignore
 
