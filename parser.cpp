@@ -402,25 +402,26 @@ void syntaxerror1(string word, tokentype expected)
   fout << "SYNTAX ERROR: expected " << tokenName[expected] << " but found " << word << endl;
   cout << "Skip or replace the token? (s or r): ";
   cin >> sel;
-  if (sel == 's')
+  if (sel == 's') // skip to the next token in the file
   {
     saved_lexeme = "";
     match(expected);
     return;
   }
-  else if (sel == 'r')
+  else if (sel == 'r') // replace the current token in the file with the expected one
   {
     saved_token = expected;
     match(expected);
     return;
   }
-  else
+  else // Invalid selection
   {
     cout << "Invalid selection. Exiting...\n";
     fout.close();
     exit(1);
   }
 }
+
 // Type of error: Unexpected token found in a parser function when doing a switch statement for the next token.
 // Done by: Tim Nguyen
 void syntaxerror2(string word, string nonterm)
@@ -500,7 +501,7 @@ void parse_story()
     cout << "Processing <s>\n";
   }
   parse_s();
-  while (next_token() != EOFM)
+  while (next_token() != EOFM) // keep parsing while there are more <s> nonterms
   {
     if (console_tracing)
       cout << "Processing <s>\n";
@@ -529,6 +530,7 @@ void parse_afterSubject()
   if (console_tracing)
     cout << "Processing <afterSubject>\n";
 
+  // Check next token to see which rhs rule to use
   switch (next_token())
   {
   case WORD2:
@@ -553,6 +555,7 @@ void parse_afterNoun()
   if (console_tracing)
     cout << "Processing <afterNoun>\n";
 
+  // Check next token to see which rhs rule to use
   switch (next_token())
   {
   case IS:
@@ -582,6 +585,7 @@ void parse_afterObject()
   if (console_tracing)
     cout << "Processing <afterObject>\n";
 
+  // Check next token to see which rhs rule to use
   switch (next_token())
   {
   case WORD2:
@@ -618,6 +622,7 @@ void parse_noun()
   if (console_tracing)
     cout << "Processing <noun>\n";
 
+  // Check next token to see which rhs rule to use
   switch (next_token())
   {
   case WORD1:
@@ -638,6 +643,7 @@ void parse_tense()
   if (console_tracing)
     cout << "Processing <tense>\n";
 
+  // Check next token to see which rhs rule to use
   switch (next_token())
   {
   case VERBPAST:
@@ -664,6 +670,7 @@ void parse_be()
   if (console_tracing)
     cout << "Processing <be>\n";
 
+  // Check next token to see which rhs rule to use
   switch (next_token())
   {
   case IS:
@@ -683,12 +690,14 @@ void parse_be()
 // Done by: Lilly Mcgraw
 int main()
 {
-  char sel;
+  char sel; // used for tracing selection
   tokentype thetype;
   string theword;
   cout << "Enter the input file name: ";
   cin >> filename;
   fin.open(filename.c_str());
+
+  // Ask if the user would like to enable console file tracing or not
   cout << "Would you like to enable file tracing in the console? (y/n): ";
   cin >> sel;
 
@@ -702,6 +711,7 @@ int main()
   // closes the error output file
   fout.close();
 } // end
+
 //** require no other input files!
 //** syntax error EC requires producing errors.txt of error messages
 //** tracing On/Off EC requires sending a flag to trace message output functions
